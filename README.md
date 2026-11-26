@@ -4,7 +4,9 @@ See how an [A2UI](https://a2ui.org) stream builds an interface, message by messa
 
 **[Open it](https://alexeyw.github.io/a2ui-xray/)** · [a stream with mistakes, in the editor](https://alexeyw.github.io/a2ui-xray/?demo=1&edit=1&step=3)
 
-![A booking form after the user pressed Book: the wire on the left, the data model and the components joined by bindings in the middle, the drawn form on the right](docs/screenshot.png)
+![The booking demo: messages arrive on the wire, components and data appear joined by bindings, the user types a name and presses Book, the agent answers; then a typo in the editor is caught and fixed](docs/demo.gif)
+
+*The booking demo played through, then a typo in the editor caught by the schema check. [Video (MP4)](docs/demo.mp4).*
 
 In A2UI an agent does not send HTML. It sends a stream of JSON messages: components that refer to each other by id, and a data model they bind to. The renderer keeps both and draws the surface. Usually you see either the raw JSON or the finished screen. This page shows what lies between them.
 
@@ -36,7 +38,11 @@ Lines starting with `//` are comments. Three kinds of comment line act out the u
 // user: press book_btn
 ```
 
-Problems are listed under the editor with their line. Click one to jump to the component. What is checked:
+Problems are listed under the editor with their line. Click one to jump to the component.
+
+![The editor on the team demo: three problems listed with their lines, and the same components flagged in the X-ray](docs/editor.png)
+
+What is checked:
 
 - each message against the official v1.0 JSON Schemas (`agent_to_renderer.json`, `common_types.json` and the basic catalog). This catches unknown components and properties, missing required ones, wrong types, unknown functions and icon names. Each error names the component, for example `“name” (TextField) › lable: unknown property “lable”`;
 - the stream as a whole: ids that are referenced but never defined, ids that are not identifiers (no hyphens), relative paths outside a template, data that components read but nobody sets, and a second `createSurface` for the same id.
@@ -70,6 +76,8 @@ node tools/test_validate.js
 ```
 
 It downloads the official v1.0 examples at the commit the schemas come from. It checks that every message passes (126 in 43 files), and that every mutation of them is caught: a renamed property, a dropped component name, a wrong type (282 mutations). It needs Node 18 or later.
+
+`node tools/record_demo.mjs` records `docs/demo.gif` and `docs/demo.mp4` from the page served at `http://localhost:8791/`. It needs Chrome, ffmpeg and Node 22 or later.
 
 ## Third-party
 
